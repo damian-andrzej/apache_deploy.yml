@@ -1,0 +1,39 @@
+#install httpd newest version
+#requirements
+# posix collection is not included into ansible core
+# ansible-galaxy collection install ansible.posix
+---
+- name: install and config webserver
+  hosts: all
+  tasks:
+    - name: install apache
+      ansible.builtin.dnf:
+        name: httpd
+        state: latest
+
+    - name: copy index.html file to webservers
+      ansible.builtin.copy:
+        src: /etc/ansible/files/index.html
+        dest: /var/www/html/index.html
+        force: true
+        owner: ansible
+        group: ansible
+        mode: "0644"
+
+    - name: ensure apache is started and enabled
+      ansible.builtin.service:
+        name: httpd
+        state: restarted
+        enable: true
+
+    - name: enable http 80 - firewalld
+      ansible.posix.firewalld:
+        port: 80/tcp
+        permanent: true
+        state: enabled
+
+    - name: enable http 443 - firewalld
+        ansible.posix.firewalld:
+          port: 443/tcp
+          permanent: true
+          state: enabled
