@@ -5,6 +5,7 @@
 ---
 - name: install and config webserver
   hosts: all
+  become: true
   tasks:
     - name: install apache
       ansible.builtin.dnf:
