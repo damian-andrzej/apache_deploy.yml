@@ -10,6 +10,14 @@
       ansible.builtin.dnf:
         name: httpd
         state: latest
+        
+    - name: copy httpd config to managed hosts
+      ansible.builtin.copy:
+        src: /etc/ansible/files/httpd.conf # prepared conf file
+        dest: /etc/httpd/conf/httpd.conf 
+        owner: root
+        group: root
+        mode: "0644"
 
     - name: copy index.html file to webservers
       ansible.builtin.copy:
@@ -37,3 +45,8 @@
           port: 443/tcp
           permanent: true
           state: enabled
+          
+    - name: reload firewalld config
+        ansible.builtin.systemd:
+          name: firewalld
+          state: reloaded
