@@ -1,4 +1,4 @@
-#install httpd newest version
+#install httpd newest version for rhel 8 and centos 9 hosts
 #requirements
 # posix collection is not included into ansible core
 # ansible-galaxy collection install ansible.posix
@@ -51,3 +51,9 @@
         ansible.builtin.systemd:
           name: firewalld
           state: reloaded
+          
+    - name: check link availability
+        ansible.builtin.uri:
+          url: "http://webserver13.home.pl"
+          status_code: 200 
+          # status code 200 means that request finished successfully
